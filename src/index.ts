@@ -2,10 +2,10 @@ import * as express from 'express';
 import {default as expressPlayground} from "graphql-playground-middleware-express";
 import {express as voyagerMiddleware} from "graphql-voyager/middleware";
 import {altairExpress} from "altair-express-middleware";
-import {graphql, ObjectTypeComposer, schemaComposer} from "graphql-compose";
+import {graphql, ObjectTypeComposer, printSchema, schemaComposer} from "graphql-compose";
 import {composeWithElastic} from "graphql-compose-elasticsearch";
 import * as elasticsearch from "elasticsearch";
-import {ApolloServer} from "apollo-server-express";
+import {ApolloServer, gql} from "apollo-server-express";
 import {buildFederatedSchema} from "./buildFederatedSchema";
 
 const { GraphQLSchema, GraphQLObjectType } = graphql;
@@ -223,10 +223,6 @@ const EcommerceEsTC = composeWithElastic({
   elasticType: '_doc',
   elasticMapping: ecommerceMapping,
   elasticClient: elasticClient
-  /*,
-  // elastic mapping does not contain information about is fields are arrays or not
-  // so provide this information explicitly for obtaining correct types in GraphQL
-  pluralFields: ['skills', 'languages'],*/
 });
 
 const ProxyTC = ObjectTypeComposer.createTemp(`type ProxyDebugType { source: JSON }`);
@@ -249,6 +245,23 @@ EcommerceEsTC.addRelation('showRelationArguments', {
   }
 });
 
+let ContentTC = schemaComposer.createObjectTC(` 
+  extend type Content @key(fields: "id") {
+    id: String! @external
+    ecommerces: [ecommerceecommerce]
+  }
+`);
+
+let typesFieldsResolve = {
+  'Content': {
+    'ecommerces':(source, args, context, info) => {
+      console.log("Here I am");
+      return null;
+    }
+  }
+};
+schemaComposer.addResolveMethods(typesFieldsResolve);
+
 const generatedSchema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
@@ -262,12 +275,7 @@ const generatedSchema = new GraphQLSchema({
         // check and change result here before returning it to user
         console.log(result);
         return result;
-      }).getFieldConfig()/*,
-            elastic75: elasticApiFieldConfig({
-                host: 'http://elastic:changeme@localhost:9200',
-                apiVersion: '7.5'/!*,
-                log: 'trace',*!/
-            })*/
+      }).getFieldConfig()
     },
   }),
 });
@@ -293,9 +301,3 @@ app.listen(expressPort, () => {
   console.log(`The server is running at http://localhost:${expressPort}/`);
 });
 
-
-const inventory = [
-  { upc: "1", inStock: true },
-  { upc: "2", inStock: false },
-  { upc: "3", inStock: true }
-];
