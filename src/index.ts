@@ -276,17 +276,6 @@ schemaComposer.getOTC('ecommerceSearchHitItem')
     .removeField(['_index','_score','_shard','_node','_explanation','_version','_type'])
     .clearExtensions();
 
-
-const CityTC = schemaComposer.createObjectTC(`
-  type City {
-    code: String!
-    name: String!
-    population: Number
-    countryCode: String
-    tz: String
-  }
-`);
-
 const app = express();
 
 const server = new ApolloServer({
