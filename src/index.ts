@@ -2,11 +2,12 @@ import * as express from 'express';
 import {default as expressPlayground} from "graphql-playground-middleware-express";
 import {express as voyagerMiddleware} from "graphql-voyager/middleware";
 import {altairExpress} from "altair-express-middleware";
-import {graphql, ObjectTypeComposer, printSchema, schemaComposer} from "graphql-compose";
+import {graphql, ObjectTypeComposer, printSchema, printSchemaComposer, SchemaComposer} from "graphql-compose";
 import {composeWithElastic} from "graphql-compose-elasticsearch";
 import * as elasticsearch from "elasticsearch";
 import {ApolloServer, gql} from "apollo-server-express";
 import {buildFederatedSchema} from "./buildFederatedSchema";
+import {collectFields} from "graphql/execution/execute";
 
 const { GraphQLSchema, GraphQLObjectType } = graphql;
 
@@ -210,7 +211,6 @@ const ecommerceMapping = {
   }
 };
 
-
 let elasticClient = new elasticsearch.Client({
   host: 'http://elastic:changeme@localhost:9200',
   apiVersion: '7.5',
@@ -245,23 +245,6 @@ EcommerceEsTC.addRelation('showRelationArguments', {
   }
 });
 
-let ContentTC = schemaComposer.createObjectTC(` 
-  extend type Content @key(fields: "id") {
-    id: String! @external
-    ecommerces: [ecommerceecommerce]
-  }
-`);
-
-let typesFieldsResolve = {
-  'Content': {
-    'ecommerces':(source, args, context, info) => {
-      console.log("Here I am");
-      return null;
-    }
-  }
-};
-schemaComposer.addResolveMethods(typesFieldsResolve);
-
 const generatedSchema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
@@ -280,14 +263,47 @@ const generatedSchema = new GraphQLSchema({
   }),
 });
 
+const schemaComposer = new SchemaComposer(generatedSchema);
+
 schemaComposer.getOTC('ecommerceSearchHitItem')
     .removeField(['_index','_score','_shard','_node','_explanation','_version','_type'])
     .clearExtensions();
 
+schemaComposer.addTypeDefs(` 
+  extend type Content @key(fields: "id") {
+    id: ID! @external
+    ecommerces: [ecommerceecommerce]
+  }
+  
+  extend type Director @key(fields: "id") {
+    id: ID! @external
+    ecommerceecommerceGeoips: [ecommerceecommerceGeoip]
+  }
+`);
+const resolvers = {
+  Content: {
+    ecommerces(content) {
+      return null;/*reviews.filter(review => review.product.upc === content.id);*/
+    }
+  },
+  Content: {
+    ecommerces(content) {
+      return null;/*reviews.filter(review => review.product.upc === content.id);*/
+    }
+  }
+};
+
+schemaComposer.addResolveMethods(resolvers);
+
+let composer = printSchemaComposer(schemaComposer, {include: ["Content",
+    "ecommerceSearchOutput", "ecommerceSearchOutputPagination", "ecommerceSearchHitItem"],
+  exclude: ['Boolean', 'String']});
 const app = express();
 
+console.log("template");
+let resolveMethods = schemaComposer.getResolveMethods();
 const server = new ApolloServer({
-  schema: buildFederatedSchema(generatedSchema)
+  schema: buildFederatedSchema([{typeDefs: gql(composer), resolvers: resolveMethods}])
 });
 
 server.applyMiddleware({ app });
@@ -301,3 +317,33 @@ app.listen(expressPort, () => {
   console.log(`The server is running at http://localhost:${expressPort}/`);
 });
 
+const usernames = [
+  { id: "1", username: "@ada" },
+  { id: "2", username: "@complete" }
+];
+const reviews = [
+  {
+    id: "1",
+    authorID: "1",
+    product: { upc: "1" },
+    body: "Love it!"
+  },
+  {
+    id: "2",
+    authorID: "1",
+    product: { upc: "2" },
+    body: "Too expensive."
+  },
+  {
+    id: "3",
+    authorID: "2",
+    product: { upc: "3" },
+    body: "Could be better."
+  },
+  {
+    id: "4",
+    authorID: "2",
+    product: { upc: "1" },
+    body: "Prefer something else."
+  }
+];
