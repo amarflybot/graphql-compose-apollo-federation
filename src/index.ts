@@ -274,11 +274,6 @@ schemaComposer.addTypeDefs(`
     id: ID! @external
     ecommerces: [ecommerceecommerce]
   }
-  
-  extend type Director @key(fields: "id") {
-    id: ID! @external
-    ecommerceecommerceGeoips: [ecommerceecommerceGeoip]
-  }
 `);
 const resolvers = {
   Content: {
