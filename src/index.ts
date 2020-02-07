@@ -2,12 +2,11 @@ import * as express from 'express';
 import {default as expressPlayground} from "graphql-playground-middleware-express";
 import {express as voyagerMiddleware} from "graphql-voyager/middleware";
 import {altairExpress} from "altair-express-middleware";
-import {graphql, ObjectTypeComposer, printSchema, printSchemaComposer, SchemaComposer} from "graphql-compose";
+import {graphql, ObjectTypeComposer, printSchemaComposer, SchemaComposer} from "graphql-compose";
 import {composeWithElastic} from "graphql-compose-elasticsearch";
 import * as elasticsearch from "elasticsearch";
 import {ApolloServer, gql} from "apollo-server-express";
-import {buildFederatedSchema} from "./buildFederatedSchema";
-import {collectFields} from "graphql/execution/execute";
+import {buildFederatedSchema} from "@apollo/federation";
 
 const { GraphQLSchema, GraphQLObjectType } = graphql;
 
@@ -269,31 +268,31 @@ schemaComposer.getOTC('ecommerceSearchHitItem')
     .removeField(['_index','_score','_shard','_node','_explanation','_version','_type'])
     .clearExtensions();
 
-schemaComposer.addTypeDefs(` 
+const extensionSdl = gql` 
   extend type Content @key(fields: "id") {
     id: ID! @external
     ecommerces: [ecommerceecommerce]
   }
-`);
+`;
 const resolvers = {
   Content: {
     ecommerces(content) {
-      return null;/*reviews.filter(review => review.product.upc === content.id);*/
+      console.log(content);
+      return null;/*find*/
     }
   }
 };
 
-schemaComposer.addResolveMethods(resolvers);
-
-let composer = printSchemaComposer(schemaComposer, {include: ["Content",
-    "ecommerceSearchOutput", "ecommerceSearchOutputPagination", "ecommerceSearchHitItem"],
-  exclude: ['Boolean', 'String']});
+let composer = printSchemaComposer(schemaComposer, {exclude: ['Boolean','String']});
 const app = express();
 
 console.log("template");
 let resolveMethods = schemaComposer.getResolveMethods();
 const server = new ApolloServer({
-  schema: buildFederatedSchema([{typeDefs: gql(composer), resolvers: resolveMethods}])
+  schema: buildFederatedSchema([
+      {typeDefs: gql(composer), resolvers: resolveMethods},
+      {typeDefs: extensionSdl, resolvers: resolvers}
+      ])
 });
 
 server.applyMiddleware({ app });
