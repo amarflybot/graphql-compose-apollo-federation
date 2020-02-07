@@ -285,11 +285,6 @@ const resolvers = {
     ecommerces(content) {
       return null;/*reviews.filter(review => review.product.upc === content.id);*/
     }
-  },
-  Content: {
-    ecommerces(content) {
-      return null;/*reviews.filter(review => review.product.upc === content.id);*/
-    }
   }
 };
 
