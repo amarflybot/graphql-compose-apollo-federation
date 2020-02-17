@@ -1,248 +1,237 @@
 import * as express from 'express';
-import {default as expressPlayground} from "graphql-playground-middleware-express";
 import {express as voyagerMiddleware} from "graphql-voyager/middleware";
 import {altairExpress} from "altair-express-middleware";
-import {graphql, ObjectTypeComposer, printSchemaComposer, SchemaComposer} from "graphql-compose";
+import {schemaComposer, SchemaComposer} from "graphql-compose";
 import {composeWithElastic} from "graphql-compose-elasticsearch";
 import * as elasticsearch from "elasticsearch";
 import {ApolloServer, gql} from "apollo-server-express";
-import {buildFederatedSchema} from "@apollo/federation";
-
-const { GraphQLSchema, GraphQLObjectType } = graphql;
+import composeWithRelay from 'graphql-compose-relay';
+import {GraphQLObjectType, GraphQLSchema} from "graphql";
+import {buildFederatedSchema} from "./buildFederatedSchema";
 
 const expressPort = process.env.port || process.env.PORT || 9201;
 
 const ecommerceMapping = {
-  "properties" : {
-    "category" : {
-      "type" : "text",
-      "fields" : {
-        "keyword" : {
-          "type" : "keyword"
-        }
-      }
-    },
-    "currency" : {
-      "type" : "keyword"
-    },
-    "customer_birth_date" : {
-      "type" : "date"
-    },
-    "customer_first_name" : {
-      "type" : "text",
-      "fields" : {
-        "keyword" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        }
-      }
-    },
-    "customer_full_name" : {
-      "type" : "text",
-      "fields" : {
-        "keyword" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        }
-      }
-    },
-    "customer_gender" : {
-      "type" : "keyword"
-    },
-    "customer_id" : {
-      "type" : "keyword"
-    },
-    "customer_last_name" : {
-      "type" : "text",
-      "fields" : {
-        "keyword" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        }
-      }
-    },
-    "customer_phone" : {
-      "type" : "keyword"
-    },
-    "day_of_week" : {
-      "type" : "keyword"
-    },
-    "day_of_week_i" : {
-      "type" : "integer"
-    },
-    "email" : {
-      "type" : "keyword"
-    },
-    "geoip" : {
-      "properties" : {
-        "city_name" : {
-          "type" : "keyword"
-        },
-        "continent_name" : {
-          "type" : "keyword"
-        },
-        "country_iso_code" : {
-          "type" : "keyword"
-        },
-        "location" : {
-          "type" : "geo_point"
-        },
-        "region_name" : {
-          "type" : "keyword"
-        }
-      }
-    },
-    "manufacturer" : {
-      "type" : "text",
-      "fields" : {
-        "keyword" : {
-          "type" : "keyword"
-        }
-      }
-    },
-    "order_date" : {
-      "type" : "date"
-    },
-    "order_id" : {
-      "type" : "keyword"
-    },
-    "products" : {
-      "properties" : {
-        "_id" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+    "properties": {
+        "category": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword"
+                }
             }
-          }
         },
-        "base_price" : {
-          "type" : "half_float"
+        "currency": {
+            "type": "keyword"
         },
-        "base_unit_price" : {
-          "type" : "half_float"
+        "customer_birth_date": {
+            "type": "date"
         },
-        "category" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword"
+        "customer_first_name": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
             }
-          }
         },
-        "created_on" : {
-          "type" : "date"
-        },
-        "discount_amount" : {
-          "type" : "half_float"
-        },
-        "discount_percentage" : {
-          "type" : "half_float"
-        },
-        "manufacturer" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword"
+        "customer_full_name": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
             }
-          }
         },
-        "min_price" : {
-          "type" : "half_float"
+        "customer_gender": {
+            "type": "keyword"
         },
-        "price" : {
-          "type" : "half_float"
+        "customer_id": {
+            "type": "keyword"
         },
-        "product_id" : {
-          "type" : "long"
-        },
-        "product_name" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword"
+        "customer_last_name": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
             }
-          },
-          "analyzer" : "english"
         },
-        "quantity" : {
-          "type" : "integer"
+        "customer_phone": {
+            "type": "keyword"
         },
-        "sku" : {
-          "type" : "keyword"
+        "day_of_week": {
+            "type": "keyword"
         },
-        "tax_amount" : {
-          "type" : "half_float"
+        "day_of_week_i": {
+            "type": "integer"
         },
-        "taxful_price" : {
-          "type" : "half_float"
+        "email": {
+            "type": "keyword"
         },
-        "taxless_price" : {
-          "type" : "half_float"
+        "geoip": {
+            "properties": {
+                "city_name": {
+                    "type": "keyword"
+                },
+                "continent_name": {
+                    "type": "keyword"
+                },
+                "country_iso_code": {
+                    "type": "keyword"
+                },
+                "location": {
+                    "type": "geo_point"
+                },
+                "region_name": {
+                    "type": "keyword"
+                }
+            }
         },
-        "unit_discount_amount" : {
-          "type" : "half_float"
+        "manufacturer": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "order_date": {
+            "type": "date"
+        },
+        "order_id": {
+            "type": "keyword"
+        },
+        "products": {
+            "properties": {
+                "_id": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "base_price": {
+                    "type": "half_float"
+                },
+                "base_unit_price": {
+                    "type": "half_float"
+                },
+                "category": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "created_on": {
+                    "type": "date"
+                },
+                "discount_amount": {
+                    "type": "half_float"
+                },
+                "discount_percentage": {
+                    "type": "half_float"
+                },
+                "manufacturer": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "min_price": {
+                    "type": "half_float"
+                },
+                "price": {
+                    "type": "half_float"
+                },
+                "product_id": {
+                    "type": "long"
+                },
+                "product_name": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    },
+                    "analyzer": "english"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "sku": {
+                    "type": "keyword"
+                },
+                "tax_amount": {
+                    "type": "half_float"
+                },
+                "taxful_price": {
+                    "type": "half_float"
+                },
+                "taxless_price": {
+                    "type": "half_float"
+                },
+                "unit_discount_amount": {
+                    "type": "half_float"
+                }
+            }
+        },
+        "sku": {
+            "type": "keyword"
+        },
+        "taxful_total_price": {
+            "type": "half_float"
+        },
+        "taxless_total_price": {
+            "type": "half_float"
+        },
+        "total_quantity": {
+            "type": "integer"
+        },
+        "total_unique_products": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "keyword"
+        },
+        "user": {
+            "type": "keyword"
         }
-      }
-    },
-    "sku" : {
-      "type" : "keyword"
-    },
-    "taxful_total_price" : {
-      "type" : "half_float"
-    },
-    "taxless_total_price" : {
-      "type" : "half_float"
-    },
-    "total_quantity" : {
-      "type" : "integer"
-    },
-    "total_unique_products" : {
-      "type" : "integer"
-    },
-    "type" : {
-      "type" : "keyword"
-    },
-    "user" : {
-      "type" : "keyword"
     }
-  }
 };
 
 let elasticClient = new elasticsearch.Client({
-  host: 'http://elastic:changeme@localhost:9200',
-  apiVersion: '7.5',
-  log: 'trace'
+    host: 'http://elastic:changeme@localhost:9200',
+    apiVersion: '7.5',
+    log: 'trace'
 });
+
+//const schemaComposer = new SchemaComposer();
 
 const EcommerceEsTC = composeWithElastic({
-  graphqlTypeName: 'ecommerce',
-  elasticIndex: 'kibana_sample_data_ecommerce',
-  elasticType: '_doc',
-  elasticMapping: ecommerceMapping,
-  elasticClient: elasticClient
-});
-
-const ProxyTC = ObjectTypeComposer.createTemp(`type ProxyDebugType { source: JSON }`);
-
-ProxyTC.addResolver({
-  name: 'showArgs',
-  kind: 'query',
-  args: {
-    source: 'JSON',
-  },
-  type: 'ProxyDebugType',
-  resolve: ({ args }) => args,
+    graphqlTypeName: 'ecommerce',
+    elasticIndex: 'kibana_sample_data_ecommerce',
+    elasticType: '_doc',
+    elasticMapping: ecommerceMapping,
+    elasticClient: elasticClient,
+    schemaComposer: schemaComposer
 });
 
 
-EcommerceEsTC.addRelation('showRelationArguments', {
-  resolver: () => ProxyTC.getResolver('showArgs'),
-  prepareArgs: {
-    source: source => source,
-  }
-});
+schemaComposer.getOTC('ecommerceSearchHitItem')
+    .removeField(['_index', '_score', '_shard', '_node', '_explanation', '_version', '_type']);
+
+schemaComposer.getOTC('ecommerceecommerceProducts')
+    .setDirectives([{name: 'key', args: {fields: 'id'}}]);
 
 const generatedSchema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -250,89 +239,89 @@ const generatedSchema = new GraphQLSchema({
     fields: {
       ecommerceSearch: EcommerceEsTC.getResolver('search').getFieldConfig(),
       ecommercePagination: EcommerceEsTC.getResolver('searchPagination').getFieldConfig(),
-      ecommerceSearchConnection: EcommerceEsTC.getResolver('searchConnection').wrapResolve(next => async (rp) => {
-        const { source, args, context, info } = rp;
-        // check here args or contexts, or even you can change `rp.args` before passing it down to `search` resolver
-        const result = await next(rp);
-        // check and change result here before returning it to user
-        console.log(result);
-        return result;
-      }).getFieldConfig()
+      ecommerceSearchConnection: EcommerceEsTC.getResolver('searchConnection').getFieldConfig()
     },
   }),
 });
 
-const schemaComposer = new SchemaComposer(generatedSchema);
+schemaComposer.Query.addFields({
+    ecommerceSearch: EcommerceEsTC.getResolver('search').getFieldConfig(),
+    ecommercePagination: EcommerceEsTC.getResolver('searchPagination').getFieldConfig(),
+    ecommerceSearchConnection: EcommerceEsTC.getResolver('searchConnection').getFieldConfig()
+});
 
-schemaComposer.getOTC('ecommerceSearchHitItem')
-    .removeField(['_index','_score','_shard','_node','_explanation','_version','_type'])
-    .clearExtensions();
+const EcommerceecommerceGeoipTC = schemaComposer.getOTC('ecommerceecommerceGeoip');
 
-const extensionSdl = gql` 
-  extend type Content @key(fields: "id") {
-    id: ID! @external
-    ecommerces: [ecommerceecommerce]
-  }
-`;
-const resolvers = {
-  Content: {
-    ecommerces(content) {
-      console.log(content);
-      return null;/*find*/
+EcommerceecommerceGeoipTC.addResolver({
+        name: 'findById',
+        kind: "query",
+        args: {
+          id: 'Int!',
+        },
+        type: EcommerceecommerceGeoipTC,
+        resolve: ({source, args, context}) => {
+            console.log(args);
+            return null;
+        }
+    })
+    .setRecordIdFn((source, args, context) => {
+        console.log("asdasd");
+        return "";
+    });
+
+schemaComposer.getOTC('ecommerceecommerce')
+    .addFields({
+        geoipConnection: composeWithRelay(EcommerceecommerceGeoipTC)
+    });
+
+const extensionSdl = gql`
+    extend type Content @key(fields: "id") {
+        id: ID! @external
+        ecommerces: [ecommerceecommerce]
     }
-  }
-};
 
-let composer = printSchemaComposer(schemaComposer, {exclude: ['Boolean','String']});
+    extend type Director @key(fields: "id") {
+        id: ID! @external
+        geoips: [ecommerceecommerceGeoip]
+    }
+`;
+
+function findEcommerceByContentId(id: number) {
+
+}
+
 const app = express();
 
-console.log("template");
-let resolveMethods = schemaComposer.getResolveMethods();
+const resolvers = {
+    Content: {
+        ecommerces: async (content, args, context, info) => {
+            console.log(content);
+            return findEcommerceByContentId(content.id);/*find ecommerces by content id*/
+        }
+    },
+    Director: {
+        geoips: async (director, args, context, info) => {
+            console.log(director);
+            return findEcommerceByContentId(director.id);/*find ecommerces by content id*/
+        }
+    }
+};
+let composer = schemaComposer.toSDL({exclude: ['Boolean', 'String', 'ID'], sortEnums: true});
+let resolveMethods = schemaComposer.getResolveMethods({exclude: ['Boolean', 'String', 'ID']});
 const server = new ApolloServer({
-  schema: buildFederatedSchema([
+  schema: buildFederatedSchema(/*[
       {typeDefs: gql(composer), resolvers: resolveMethods},
       {typeDefs: extensionSdl, resolvers: resolvers}
-      ])
+      ]*/generatedSchema)
 });
 
-server.applyMiddleware({ app });
+server.applyMiddleware({app});
 
-app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }));
-app.use('/playground', expressPlayground({ endpoint: '/graphql' }));
+let sort = schemaComposer.Query.getFieldArg('ecommerceSearchConnection', 'sort');
+app.use('/voyager', voyagerMiddleware({endpointUrl: '/graphql'}));
+
 app.use('/altair', altairExpress({endpointURL: '/graphql'}));
 
-
 app.listen(expressPort, () => {
-  console.log(`The server is running at http://localhost:${expressPort}/`);
+    console.log(`The server is running at http://localhost:${expressPort}/`);
 });
-
-const usernames = [
-  { id: "1", username: "@ada" },
-  { id: "2", username: "@complete" }
-];
-const reviews = [
-  {
-    id: "1",
-    authorID: "1",
-    product: { upc: "1" },
-    body: "Love it!"
-  },
-  {
-    id: "2",
-    authorID: "1",
-    product: { upc: "2" },
-    body: "Too expensive."
-  },
-  {
-    id: "3",
-    authorID: "2",
-    product: { upc: "3" },
-    body: "Could be better."
-  },
-  {
-    id: "4",
-    authorID: "2",
-    product: { upc: "1" },
-    body: "Prefer something else."
-  }
-];
