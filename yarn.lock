@@ -2023,17 +2023,22 @@ graphql-cli@2.17.0:
     update-notifier "^2.3.0"
     yargs "11.0.0"
 
-graphql-compose-elasticsearch@^4.0.7:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/graphql-compose-elasticsearch/-/graphql-compose-elasticsearch-4.0.7.tgz#f6157983052931100700f9b8cb9669f49ce1c7fa"
-  integrity sha512-jbQ77JsjOL+QR7P6GWkCniMYGOp4tQBQGLxitVc35RYG9jgSQPE4QM539yksVRSsOq7eHA7M3v0BE1wcjWXVHw==
+graphql-compose-elasticsearch@^4.0.8:
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/graphql-compose-elasticsearch/-/graphql-compose-elasticsearch-4.0.9.tgz#1c2e7a316b9acbc3580491708eac1c5d46af5d3a"
+  integrity sha512-5UR5ylfoDLhbfU3cp1xHIODRe1y6mWyC26+IUD8/sZB3KiN5cdKE4CuiVf/rfvvobrUShsvsdKZdkSvQ1opcHg==
   dependencies:
     dox "^0.9.0"
 
-graphql-compose@^7.11.0:
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-7.11.0.tgz#77e7435918f7f9a186ae9e939fa2c92c3bb85cdd"
-  integrity sha512-vmAaNA4BUM7PBe1PpujLRIsAlx1qjaoAsol1IvGQKBIi8TwdrLnFZEza0O7+AalqbmcP2eqZ5On/pALP/88ZiA==
+graphql-compose-relay@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/graphql-compose-relay/-/graphql-compose-relay-5.0.3.tgz#5db94d47289f802c89dbdfdf5c95c8e5c2b14497"
+  integrity sha512-g/4TOelWAPlw3Ib2krLmmHBdqqaEHBp71/oFk/wDllK9MS5ukXVn//ffqggIVoohx453gd+UIUYCVOKukvErDA==
+
+graphql-compose@^7.12.1:
+  version "7.12.1"
+  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-7.12.1.tgz#f3c7b94544fc5717512c02c4b66f4660fac01d22"
+  integrity sha512-cUg8DooCdWgf/otm1zCeqdKVFe50lWltS7xVDdtkmDF8v9GvMShQpP6S2fTUZhcoIJD9fG4SwrKqPwrBAnj1zA==
   dependencies:
     graphql-type-json "^0.3.1"
     object-path "^0.11.4"
