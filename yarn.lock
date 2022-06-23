@@ -734,21 +734,9 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
-array-filter@~0.0.0:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/array-filter/-/array-filter-0.0.1.tgz#7da8cf2e26628ed732803581fd21f67cacd2eeec"
-
 array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
-
-array-map@~0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/array-map/-/array-map-0.0.0.tgz#88a2bab73d1cf7bcd5c1b118a003f66f665fa662"
-
-array-reduce@~0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/array-reduce/-/array-reduce-0.0.0.tgz#173899d3ffd1c7d9383e4479525dbe278cab5f2b"
 
 arrify@^1.0.0:
   version "1.0.1"
@@ -2023,10 +2011,10 @@ graphql-cli@2.17.0:
     update-notifier "^2.3.0"
     yargs "11.0.0"
 
-graphql-compose-elasticsearch@^4.0.8:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/graphql-compose-elasticsearch/-/graphql-compose-elasticsearch-4.0.9.tgz#1c2e7a316b9acbc3580491708eac1c5d46af5d3a"
-  integrity sha512-5UR5ylfoDLhbfU3cp1xHIODRe1y6mWyC26+IUD8/sZB3KiN5cdKE4CuiVf/rfvvobrUShsvsdKZdkSvQ1opcHg==
+graphql-compose-elasticsearch@^4.0.9:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/graphql-compose-elasticsearch/-/graphql-compose-elasticsearch-4.0.10.tgz#9d2df97e62ea6f4856eb0279489db8ad15728299"
+  integrity sha512-OHc1x9BoUiYAD3OJd5yYj5D042r05IEZEnBGQ69PE69uwiizyOigVeKDoFQSi8msxMh8FEH8oB0mpmmcv2KgdA==
   dependencies:
     dox "^0.9.0"
 
@@ -2035,13 +2023,13 @@ graphql-compose-relay@^5.0.3:
   resolved "https://registry.yarnpkg.com/graphql-compose-relay/-/graphql-compose-relay-5.0.3.tgz#5db94d47289f802c89dbdfdf5c95c8e5c2b14497"
   integrity sha512-g/4TOelWAPlw3Ib2krLmmHBdqqaEHBp71/oFk/wDllK9MS5ukXVn//ffqggIVoohx453gd+UIUYCVOKukvErDA==
 
-graphql-compose@^7.12.1:
-  version "7.12.1"
-  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-7.12.1.tgz#f3c7b94544fc5717512c02c4b66f4660fac01d22"
-  integrity sha512-cUg8DooCdWgf/otm1zCeqdKVFe50lWltS7xVDdtkmDF8v9GvMShQpP6S2fTUZhcoIJD9fG4SwrKqPwrBAnj1zA==
+graphql-compose@^7.12.4:
+  version "7.25.1"
+  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-7.25.1.tgz#9d89f72781931590d4dfca6a709f381f2f76b873"
+  integrity sha512-TPXTe1BoQkMjp/MH93yA0SQo8PiXxJAv6Eo6K/+kpJELM9l2jZnd5PCduweuXFcKv+nH973wn/VYzYKDMQ9YoQ==
   dependencies:
-    graphql-type-json "^0.3.1"
-    object-path "^0.11.4"
+    graphql-type-json "0.3.2"
+    object-path "0.11.5"
 
 graphql-config-extension-graphcool@1.0.11:
   version "1.0.11"
@@ -2181,10 +2169,10 @@ graphql-tools@^4.0.6:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-type-json@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.1.tgz#47fca2b1fa7adc0758d165b33580d7be7a6cf548"
-  integrity sha512-1lPkUXQ2L8o+ERLzVAuc3rzc/E6pGF+6HnjihCVTK0VzR0jCuUd92FqNxoHdfILXqOn2L6b4y47TBxiPyieUVA==
+graphql-type-json@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
+  integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==
 
 graphql-upload@^8.0.2:
   version "8.1.0"
@@ -3254,6 +3242,11 @@ object-keys@^1.0.8:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.12.tgz#09c53855377575310cca62f55bb334abff7b3ed2"
 
+object-path@0.11.5:
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.5.tgz#d4e3cf19601a5140a55a16ad712019a9c50b577a"
+  integrity sha512-jgSbThcoR/s+XumvGMTMf81QVBmah+/Q7K7YduKeKVWL7N111unR2d6pZZarSk6kY/caeNxUDyxOvMWyzoU2eg==
+
 object-path@^0.11.4:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.4.tgz#370ae752fbf37de3ea70a861c23bba8915691949"
@@ -4093,13 +4086,9 @@ shebang-regex@^1.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
 shell-quote@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.6.1.tgz#f4781949cce402697127430ea3b3c5476f481767"
-  dependencies:
-    array-filter "~0.0.0"
-    array-map "~0.0.0"
-    array-reduce "~0.0.0"
-    jsonify "~0.0.0"
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.3.tgz#aa40edac170445b9a431e17bb62c0b881b9c4123"
+  integrity sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
